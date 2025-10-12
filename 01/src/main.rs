@@ -24,7 +24,7 @@ fn main() {
     // Read into 2 seperate lists
     let mut a: Vec<i32> = Vec::new();
     let mut b: Vec<i32> = Vec::new();
-    if let Ok(lines) = read_lines("./inputs/short.txt") {
+    if let Ok(lines) = read_lines("../inputs/01/short.txt") {
         for line in lines.map_while(Result::ok) {
             let foo: Vec<i32> = line
                 .split_whitespace()
@@ -33,6 +33,8 @@ fn main() {
             a.push(foo[0]);
             b.push(foo[1]);
         }
+    } else {
+        panic!("Could not read file");
     }
 
     // Part 1
