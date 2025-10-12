@@ -11,10 +11,6 @@ where
     Ok(io::BufReader::new(file).lines())
 }
 
-fn sum_vector(a: &Vec<i32>) -> i32 {
-    a.iter().sum()
-}
-
 fn count_value_instances(vec: &Vec<i32>, val: i32) -> i32 {
     let count = vec.iter().filter(|&n| *n == val).count();
     return count as i32;
@@ -43,7 +39,7 @@ fn main() {
     a.sort();
     b.sort();
     let diff: Vec<i32> = a.iter().zip(b.iter()).map(|(x, y)| (x - y).abs()).collect();
-    let diff_sum: i32 = sum_vector(&diff);
+    let diff_sum: i32 = diff.iter().sum();
     println!("Diffs Sum: {:?}", diff_sum);
 
     // Part 2
