@@ -19,7 +19,7 @@ enum Direction {
 fn main() {
     let mut safe_count: i32 = 0;
 
-    if let Ok(lines) = read_lines("../inputs/02/long.txt") {
+    if let Ok(lines) = read_lines("../inputs/02/short.txt") {
         for line in lines.map_while(Result::ok) {
             let mut is_safe = true;
             let mut direction: Option<Direction> = None;
@@ -29,41 +29,20 @@ fn main() {
                 .map(|x| x.parse::<i32>().unwrap())
                 .collect();
 
-            let foo = report_levels.windows(2);
-            for i in foo {
-                let diff = (i[1] - i[0]).abs();
-                if diff < 1 || diff > 3 {
-                    is_safe = false;
-                    break;
-                }
+            println!("Line {line}");
 
-                match direction {
-                    Some(Direction::Increasing) => {
-                        if i[1] < i[0] {
-                            is_safe = false;
-                            break;
-                        }
-                    }
-                    Some(Direction::Decreasing) => {
-                        if i[1] > i[0] {
-                            is_safe = false;
-                            break;
-                        }
-                    }
-                    None => {
-                        if i[1] > i[0] {
-                            direction = Some(Direction::Increasing)
-                        } else {
-                            direction = Some(Direction::Decreasing)
-                        }
-                    }
-                }
-            }
-            if is_safe {
-                safe_count += 1;
+            let groups_of_three = report_levels.windows(3);
+            // for level in report_levels.iter() {
+            //     println!("{level}");
+            // }
+
+            println!("groups of three: {:?}", groups_of_three);
+
+            let initial_direction: Direction;
+
+            for group in groups_of_three {
+                println!("Group: {:?}", group);
             }
         }
     }
-
-    println!("Safe count: {}", safe_count);
 }
