@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
+use std::io;
 
 fn count_value_instances(vec: &Vec<i32>, val: i32) -> i32 {
     let count = vec.iter().filter(|&n| *n == val).count();
