@@ -11,8 +11,7 @@ fn get_similarity_score(val: i32, count: i32) -> i32 {
     val * count
 }
 
-pub fn result(lines: io::Lines<io::BufReader<File>>) {
-    // Read into 2 seperate lists
+pub fn part1(lines: io::Lines<io::BufReader<File>>) -> i32 {
     let mut a: Vec<i32> = Vec::new();
     let mut b: Vec<i32> = Vec::new();
 
@@ -25,14 +24,28 @@ pub fn result(lines: io::Lines<io::BufReader<File>>) {
         b.push(foo[1]);
     }
 
-    // Part 1
     a.sort();
     b.sort();
     let diff: Vec<i32> = a.iter().zip(b.iter()).map(|(x, y)| (x - y).abs()).collect();
     let diff_sum: i32 = diff.iter().sum();
-    println!("Diffs Sum: {:?}", diff_sum);
+    return diff_sum;
+}
 
-    // Part 2
+pub fn part2(lines: io::Lines<io::BufReader<File>>) -> i32 {
+    let mut a: Vec<i32> = Vec::new();
+    let mut b: Vec<i32> = Vec::new();
+
+    for line in lines.map_while(Result::ok) {
+        let foo: Vec<i32> = line
+            .split_whitespace()
+            .map(|x| x.parse::<i32>().unwrap())
+            .collect();
+        a.push(foo[0]);
+        b.push(foo[1]);
+    }
+
+    a.sort();
+    b.sort();
     let mut counts: HashMap<i32, i32> = HashMap::new();
 
     let mut total: i32 = 0;
@@ -43,8 +56,7 @@ pub fn result(lines: io::Lines<io::BufReader<File>>) {
             Some(i) => *i,
         };
         counts.insert(*val, count);
-        // let sim_score: i32 = val * count;
         total += get_similarity_score(*val, count);
     }
-    println!("Simalirty Score: {:?}", total);
+    return total;
 }
