@@ -1,6 +1,7 @@
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 use core::panic;
 use std::env;
@@ -65,6 +66,11 @@ fn main() {
             _ if day == "03" => match part {
                 _ if part == "1" => day03::part1(lines),
                 _ if part == "2" => day03::part2(lines),
+                _ => panic!("Invalid part supplied"),
+            },
+            _ if day == "04" => match part {
+                _ if part == "1" => day04::part1(lines),
+                // _ if part == "2" => day04::part2(lines),
                 _ => panic!("Invalid part supplied"),
             },
             _ => {
