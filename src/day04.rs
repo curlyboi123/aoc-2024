@@ -88,6 +88,7 @@ pub fn part1(lines: io::Lines<io::BufReader<File>>) -> i32 {
                         break;
                     }
 
+                    // TODO sort out break out logic
                     if let Some(adjacent_char) = grid.get(&curr_coords) {
                         if *adjacent_char == *char && additional_chars.peek().is_none() {
                             count += 1;
