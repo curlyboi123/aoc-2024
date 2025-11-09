@@ -2,20 +2,24 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::hash::Hash;
 use std::io;
-use std::thread::current;
+use strum::{EnumIter, IntoEnumIterator};
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 struct Coord {
-    x: usize,
-    y: usize,
+    x: i32,
+    y: i32,
 }
 
-impl Coord {
-    fn left_coord(&self) -> Self {
-        let Self { x, y } = self;
-        let y = y + 1;
-        return Self { x: *x, y };
-    }
+#[derive(Debug, EnumIter)]
+enum Direction {
+    Right,
+    Left,
+    Up,
+    Down,
+    UpRight,
+    DownRight,
+    UpLeft,
+    DownLeft,
 }
 
 pub fn part1(lines: io::Lines<io::BufReader<File>>) -> i32 {
@@ -24,12 +28,14 @@ pub fn part1(lines: io::Lines<io::BufReader<File>>) -> i32 {
     let mut grid: HashMap<Coord, char> = HashMap::new();
 
     for (x, line) in lines.map_while(Result::ok).enumerate() {
-        // println!("Line: {y}");
-        // println!("{idx}");
         for (y, char) in line.chars().enumerate() {
-            // println!("Chars: {char}");
-
-            grid.insert(Coord { x, y }, char);
+            grid.insert(
+                Coord {
+                    x: x as i32,
+                    y: y as i32,
+                },
+                char,
+            );
         }
     }
 
@@ -37,37 +43,69 @@ pub fn part1(lines: io::Lines<io::BufReader<File>>) -> i32 {
 
     for (k, v) in grid.iter() {
         if *v == 'X' {
-            // Check characters to the right
-            let start_coords = k;
-            let mut additional_chars = ['M', 'A', 'S'].iter().peekable();
-            let mut curr_coords = k.clone();
-            while let Some(char) = additional_chars.next() {
-                curr_coords = Coord {
-                    x: curr_coords.x,
-                    y: curr_coords.y + 1,
-                };
-                if let Some(adjacent_char) = grid.get(&curr_coords) {
-                    if *adjacent_char == *char {
-                        if additional_chars.peek().is_none() {
-                            let end_coords = &curr_coords;
-                            println!(
-                                "Word 'XMAS' found between coords: {start_coords:?} and {end_coords:?}"
-                            );
-                            count += 1;
-                        }
+            for dir in Direction::iter() {
+                let start_coords = k.clone();
+                let mut curr_coords = k.clone();
+                let mut additional_chars = ['M', 'A', 'S'].iter().peekable();
+
+                while let Some(char) = additional_chars.next() {
+                    curr_coords = match dir {
+                        Direction::Right => Coord {
+                            x: curr_coords.x,
+                            y: curr_coords.y + 1,
+                        },
+                        Direction::Left => Coord {
+                            x: curr_coords.x,
+                            y: curr_coords.y - 1,
+                        },
+                        Direction::Up => Coord {
+                            x: curr_coords.x - 1,
+                            y: curr_coords.y,
+                        },
+                        Direction::Down => Coord {
+                            x: curr_coords.x + 1,
+                            y: curr_coords.y,
+                        },
+                        Direction::UpRight => Coord {
+                            x: curr_coords.x - 1,
+                            y: curr_coords.y + 1,
+                        },
+                        Direction::UpLeft => Coord {
+                            x: curr_coords.x - 1,
+                            y: curr_coords.y - 1,
+                        },
+                        Direction::DownRight => Coord {
+                            x: curr_coords.x + 1,
+                            y: curr_coords.y + 1,
+                        },
+                        Direction::DownLeft => Coord {
+                            x: curr_coords.x + 1,
+                            y: curr_coords.y - 1,
+                        },
+                    };
+
+                    if curr_coords.x < 0 || curr_coords.y < 0 {
+                        break;
                     }
-                } else {
-                    break;
+
+                    if let Some(adjacent_char) = grid.get(&curr_coords) {
+                        if *adjacent_char == *char && additional_chars.peek().is_none() {
+                            count += 1;
+
+                            let end_coords = &curr_coords;
+
+                            println!("Direction {dir:?}");
+                            println!("Start: {start_coords:?}");
+                            println!("End: {end_coords:?}");
+                            println!();
+                        }
+                    } else {
+                        break;
+                    }
                 }
             }
-
-            // Check vertical
-
-            // Check diagonal
         }
     }
-
-    // println!("Grid: {grid:?}");
 
     return count;
 }
