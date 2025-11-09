@@ -48,6 +48,8 @@ pub fn part1(lines: io::Lines<io::BufReader<File>>) -> i32 {
                 let mut curr_coords = k.clone();
                 let mut additional_chars = ['M', 'A', 'S'].iter().peekable();
 
+                let mut found = false;
+
                 while let Some(char) = additional_chars.next() {
                     curr_coords = match dir {
                         Direction::Right => Coord {
@@ -90,15 +92,19 @@ pub fn part1(lines: io::Lines<io::BufReader<File>>) -> i32 {
 
                     // TODO sort out break out logic
                     if let Some(adjacent_char) = grid.get(&curr_coords) {
-                        if *adjacent_char == *char && additional_chars.peek().is_none() {
-                            count += 1;
+                        if *adjacent_char == *char {
+                            if additional_chars.peek().is_none() {
+                                count += 1;
 
-                            let end_coords = &curr_coords;
+                                let end_coords = &curr_coords;
 
-                            println!("Direction {dir:?}");
-                            println!("Start: {start_coords:?}");
-                            println!("End: {end_coords:?}");
-                            println!();
+                                // println!("Direction {dir:?}");
+                                // println!("Start: {start_coords:?}");
+                                // println!("End: {end_coords:?}");
+                                // println!();
+                            }
+                        } else {
+                            break;
                         }
                     } else {
                         break;
